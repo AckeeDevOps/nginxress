@@ -8,3 +8,4 @@ COPY rc.local /etc/rc.local
 RUN chmod +x /etc/rc.local
 
 CMD ["/etc/rc.local"]
+
