@@ -30,7 +30,7 @@ def delete_config(name,namespace):
     print("Deleted config for "+name+"."+namespace)
     call(["killall","-HUP","nginx"])
 
-response = requests.get(apiurl,
+response = requests.get(apiurl+'api/v1/watch/services',
                          auth=(apiuser,apipass), verify=False, stream=True)
 for line in response.iter_lines():
     try:
@@ -39,14 +39,23 @@ for line in response.iter_lines():
         ip=data["object"]["spec"]["clusterIP"]
         port=data["object"]["spec"]["ports"][0]["port"]
         name=data["object"]["metadata"]["name"]
+        link=data["object"]["metadata"]["selfLink"]
         namespace=data["object"]["metadata"]["namespace"]
-        if (port==80):
+        labels=requests.get(apiurl+link,auth=(apiuser,apipass), verify=False, stream=False)
+        generate=False
+        for i in labels.iter_lines():
+            l=json.loads(i.decode('utf-8'))['metadata']['labels']
+            if ('visibility' in l):
+                if (l['visibility'] == 'publichttp'):
+                    generate=True
+        if (generate==True):
             if (typ=="ADDED"):
                 make_config(name,namespace,ip,port)
             else:
                 delete_config(name)
     except Exception as e:
         pprint.pprint(e)
+#        pprint.pprint(data)
         pass
 
 print("Update exited")
