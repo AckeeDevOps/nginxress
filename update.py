@@ -43,11 +43,12 @@ for line in response.iter_lines():
         namespace=data["object"]["metadata"]["namespace"]
         labels=requests.get(apiurl+link,auth=(apiuser,apipass), verify=False, stream=False)
         generate=False
-        for i in labels.iter_lines():
-            l=json.loads(i.decode('utf-8'))['metadata']['labels']
-            if ('visibility' in l):
-                if (l['visibility'] == 'publichttp'):
-                    generate=True
+        #for i in labels.iter_lines():
+        #    l=json.loads(i.decode('utf-8'))['metadata']['labels']
+            #if ('visibility' in l):
+            #    if (l['visibility'] == 'publichttp'):
+            #        generate=True
+        generate=True
         if (generate==True):
             if (typ=="ADDED"):
                 make_config(name,namespace,ip,port)
