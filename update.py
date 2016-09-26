@@ -13,7 +13,7 @@ apipass=os.environ['K8S_PASSWORD']
 
 def make_config(name,namespace,ip,port):
     changed=True
-    c = open("/etc/nginx/conf.d/"+name+"-"+namespace+""+domain+".conf","w")
+    c = open("/etc/nginx/conf.d/"+name+"-"+namespace+"."+domain+".conf","w")
     c.write("server {\n")
     c.write("    server_name "+name+"-"+namespace+"."+domain+";\n")
     c.write("    location / {\n")
