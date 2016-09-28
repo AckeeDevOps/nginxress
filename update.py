@@ -16,21 +16,21 @@ apiurl="https://"+apihost+":"+apiport+"/"
 
 def make_config(name,namespace,ip,port):
     changed=True
-    c = open("/etc/nginx/conf.d/"+name+"."+namespace+".conf","w")
+    c = open("/etc/nginx/conf.d/"+name+"-"+namespace+"."+domain+".conf","w")
     c.write("server {\n")
-    c.write("    server_name "+name+"."+namespace+"."+domain+";\n")
+    c.write("    server_name "+name+"-"+namespace+"."+domain+";\n")
     c.write("    location / {\n")
     if (namespace == "kube-system"):
         c.write("        allow 84.242.105.0/24;\n        allow 46.135.165.0/24;\n        allow 192.242.105.120/29;\n        deny all;\n")
     c.write("        proxy_pass http://"+ip+":"+str(port)+"/;\n")
     c.write("    }\n}\n")
     c.close()
-    print("Created config for "+name+"."+namespace)
+    print("Created config for "+name+"-"+namespace)
     call(["killall","-HUP","nginx"])
 
 def delete_config(name,namespace):
-    os.unlink("/etc/nginx/conf.d/"+name+"."+namespace+".conf")
-    print("Deleted config for "+name+"."+namespace)
+    os.unlink("/etc/nginx/conf.d/"+name+"-"+namespace+".conf")
+    print("Deleted config for "+name+"-"+namespace)
     call(["killall","-HUP","nginx"])
 
 response = requests.get(apiurl+"api/v1/watch/services",
@@ -47,11 +47,12 @@ for line in response.iter_lines():
         print(typ+" "+name)
         labels=requests.get(apiurl+link,headers=headers, verify=False, stream=False)
         generate=False
-        for i in labels.iter_lines():
-            l=json.loads(i.decode('utf-8'))['metadata']['labels']
-            if ('visibility' in l):
-                if (l['visibility'] == 'publichttp'):
-                    generate=True
+        #for i in labels.iter_lines():
+        #    l=json.loads(i.decode('utf-8'))['metadata']['labels']
+            #if ('visibility' in l):
+            #    if (l['visibility'] == 'publichttp'):
+            #        generate=True
+        generate=True
         if (generate==True):
             if (typ=="ADDED"):
                 make_config(name,namespace,ip,port)
