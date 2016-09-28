@@ -57,7 +57,7 @@ for line in response.iter_lines():
             if (typ=="ADDED"):
                 make_config(name,namespace,ip,port)
             else:
-                delete_config(name)
+                delete_config(name,namespace)
     except Exception as e:
         pprint.pprint(e)
         pass
