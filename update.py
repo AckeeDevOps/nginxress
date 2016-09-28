@@ -29,7 +29,7 @@ def make_config(name,namespace,ip,port):
     call(["killall","-HUP","nginx"])
 
 def delete_config(name,namespace):
-    os.unlink("/etc/nginx/conf.d/"+name+"-"+namespace+".conf")
+    os.unlink("/etc/nginx/conf.d/"+name+"-"+namespace+"."+domain+".conf")
     print("Deleted config for "+name+"-"+namespace)
     call(["killall","-HUP","nginx"])
 
