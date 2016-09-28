@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3 -W ignore
 
 import json
 import pprint
@@ -7,9 +7,12 @@ from subprocess import call
 import os
 
 domain="ack.ee"
-apiurl=os.environ['K8S_URL']
-apiuser=os.environ['K8S_USER']
-apipass=os.environ['K8S_PASSWORD']
+with open('/var/run/secrets/kubernetes.io/serviceaccount/token', 'r') as f:
+        apitoken=f.read().replace('\n', '')
+headers={"Authorization":"Bearer "+apitoken}
+apihost=os.environ['KUBERNETES_SERVICE_HOST']
+apiport=os.environ['KUBERNETES_PORT_443_TCP_PORT']
+apiurl="https://"+apihost+":"+apiport+"/"
 
 def make_config(name,namespace,ip,port):
     changed=True
@@ -30,8 +33,8 @@ def delete_config(name,namespace):
     print("Deleted config for "+name+"."+namespace)
     call(["killall","-HUP","nginx"])
 
-response = requests.get(apiurl+'api/v1/watch/services',
-                         auth=(apiuser,apipass), verify=False, stream=True)
+response = requests.get(apiurl+"api/v1/watch/services",
+                         headers=headers, verify=False, stream=True)
 for line in response.iter_lines():
     try:
         data = json.loads(line.decode('utf-8'))
@@ -41,7 +44,8 @@ for line in response.iter_lines():
         name=data["object"]["metadata"]["name"]
         link=data["object"]["metadata"]["selfLink"]
         namespace=data["object"]["metadata"]["namespace"]
-        labels=requests.get(apiurl+link,auth=(apiuser,apipass), verify=False, stream=False)
+        print(typ+" "+name)
+        labels=requests.get(apiurl+link,headers=headers, verify=False, stream=False)
         generate=False
         for i in labels.iter_lines():
             l=json.loads(i.decode('utf-8'))['metadata']['labels']
@@ -55,7 +59,6 @@ for line in response.iter_lines():
                 delete_config(name)
     except Exception as e:
         pprint.pprint(e)
-#        pprint.pprint(data)
         pass
 
 print("Update exited")

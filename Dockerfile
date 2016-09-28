@@ -1,6 +1,6 @@
-FROM nginx
+FROM ubuntu:16.04
 
-RUN apt-get update && apt-get -y install python3.4 python3-requests psmisc
+RUN apt-get update && apt-get -y install nginx python3.5 python3-requests psmisc
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY update.py /root/update.py
 RUN chmod +x /root/update.py
