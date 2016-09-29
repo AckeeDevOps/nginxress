@@ -6,7 +6,7 @@ import requests
 from subprocess import call
 import os
 
-domain="ack.ee"
+domain=os.environ['DOMAIN']
 with open('/var/run/secrets/kubernetes.io/serviceaccount/token', 'r') as f:
         apitoken=f.read().replace('\n', '')
 headers={"Authorization":"Bearer "+apitoken}
