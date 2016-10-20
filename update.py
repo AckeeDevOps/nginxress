@@ -19,6 +19,7 @@ def make_config(name,namespace,ip,port):
     c = open("/etc/nginx/conf.d/"+name+"-"+namespace+"."+domain+".conf","w")
     c.write("server {\n")
     c.write("    server_name "+name+"-"+namespace+"."+domain+";\n")
+    c.write("    proxy_set_header Host $host;\n")
     c.write("    location / {\n")
     if (namespace == "kube-system"):
         c.write("        allow 84.242.105.0/24;\n        allow 46.135.165.0/24;\n        allow 192.242.105.120/29;\n        deny all;\n")
