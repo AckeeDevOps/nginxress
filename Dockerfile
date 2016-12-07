@@ -12,4 +12,13 @@ RUN sed -idefault 's/# server_names_hash_bucket_size 64/server_names_hash_bucket
 
 WORKDIR /etc/nginx/conf.d/
 
+RUN echo "                       \
+    stream {                     \
+      server {                   \
+        listen 3306;             \
+        proxy_pass mysql:3306;   \
+      }                          \
+    }                            \
+   " >>/etc/nginx/nginx.conf
+
 CMD ["/etc/rc.local"]
