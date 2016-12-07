@@ -1,4 +1,4 @@
 #!/bin/bash
 
-/usr/sbin/nginx --with-stream
+/usr/sbin/nginx
 /root/update.py
