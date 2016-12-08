@@ -18,10 +18,6 @@ RUN echo "                       \
         listen 3306;             \
         proxy_pass mysql:3306;   \
       }                          \
-     server {                    \
-        listen 27017;            \
-        proxy mongo-dev-persistent:27017; \
-     }                           \
     }                            \
    " >>/etc/nginx/nginx.conf
 
