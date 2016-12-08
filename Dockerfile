@@ -12,13 +12,7 @@ RUN sed -idefault 's/# server_names_hash_bucket_size 64/server_names_hash_bucket
 
 WORKDIR /etc/nginx/conf.d/
 
-RUN echo "                       \
-    stream {                     \
-      server {                   \
-        listen 3306;             \
-        proxy_pass mysql:3306;   \
-      }                          \
-    }                            \
-   " >>/etc/nginx/nginx.conf
+# add tcp lb stream config files to main nginx.conf
+RUN echo "stream { include /etc/nginx/conf.d/*.stream; } "  >> /etc/nginx/nginx.conf
 
 CMD ["/etc/rc.local"]
