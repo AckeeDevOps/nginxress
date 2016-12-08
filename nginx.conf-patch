@@ -1,5 +1,5 @@
 stream {
-  preread_buffer_size 64k;
+  #preread_buffer_size 64k;
   preread_timeout 180s;
   proxy_protocol_timeout 300s;
   variables_hash_bucket_size 128;
