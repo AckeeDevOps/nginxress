@@ -62,5 +62,5 @@ for line in response.iter_lines():
     except Exception as e:
         pprint.pprint(e)
         pass
-call("/etc/nginx/conf.d/setCloudflareDNS.sh")
+call("/root/setCloudflareDNS.sh")
 print("Update exited")
