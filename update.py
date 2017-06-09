@@ -5,6 +5,9 @@ import pprint
 import requests
 from subprocess import call
 import os
+import re
+
+addr-test = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 
 domain=os.environ['DOMAIN']
 with open('/var/run/secrets/kubernetes.io/serviceaccount/token', 'r') as f:
@@ -41,6 +44,8 @@ for line in response.iter_lines():
         data = json.loads(line.decode('utf-8'))
         typ=ip=data["type"]
         ip=data["object"]["spec"]["clusterIP"]
+        if (not addr-test.match(ip)):
+            continue
         port=data["object"]["spec"]["ports"][0]["port"]
         name=data["object"]["metadata"]["name"]
         link=data["object"]["metadata"]["selfLink"]
