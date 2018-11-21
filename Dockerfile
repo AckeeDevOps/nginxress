@@ -10,7 +10,8 @@ RUN sed -idefault 's/# server_names_hash_bucket_size 64/server_names_hash_bucket
     sed -idefault 's/worker_connections 768/worker_connections 5000/gi' /etc/nginx/nginx.conf && \
     chmod +x /root/update.py && \
     chmod +x /etc/rc.local && \
-    sed -i '11 a client_max_body_size 1000M;' /etc/nginx/nginx.conf
+    sed -i '11 a client_max_body_size 1000M;' /etc/nginx/nginx.conf && \
+    sed -i '12 a proxy_read_timeout 300;' /etc/nginx/nginx.conf
 
 WORKDIR /etc/nginx/conf.d/
 
