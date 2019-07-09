@@ -6,3 +6,5 @@ This is a simple container that contains the nginx webserver and a python script
 It requires DNS records in following way: servicename-namespace.domain
 
 Domain is set as DOMAIN system env and is the only required parameter.
+
+This is now obsolete as we use native Ingress controller [https://traefik.io/](traefik)
